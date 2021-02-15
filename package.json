@@ -1,19 +1,19 @@
 {
-  "name": "generator-fullstack-bootstrapper",
+  "name": "generator-front-to-back",
   "version": "0.0.0",
   "description": "Fullstack bootstrapper",
   "homepage": "",
   "author": {
     "name": "Guna Shekar",
     "email": "gunashekherproddatoori@gmail.com",
-    "url": ""
+    "url": "https://www.linkedin.com/in/guna-shekar-proddaturi/"
   },
   "files": [
     "generators"
   ],
   "main": "generators/index.js",
   "keywords": [
-    "",
+    "fullstack",
     "yeoman-generator"
   ],
   "devDependencies": {
