@@ -13,7 +13,7 @@ module.exports = class extends Generator {
     this.description = "My cool app";
     this.version = "1.0.0";
     this.apiRoot = "/api/v1";
-    this.test = "one"
+    this.test = "one";
   }
 
   async prompting() {
@@ -44,7 +44,7 @@ module.exports = class extends Generator {
       },
       {
         type: "input",
-        name: "test" ,
+        name: "test",
         message: "Which file"
       }
     ];
@@ -67,10 +67,10 @@ module.exports = class extends Generator {
   }
 
   writing() {
-    const src = this.sourceRoot();
+    const src = this.sourceRoot() + "/**";
     const dest = this.destinationPath(this.name);
 
-    // const files = [
+    // Const files = [
     //   "package.json",
     //   "README.md",
     //   ".env",
@@ -87,8 +87,7 @@ module.exports = class extends Generator {
     //   "gitignore"
     // ];
 
-    const files = [
-    ]
+    const files = [];
 
     const copyOpts = {
       globOptions: {
@@ -96,18 +95,17 @@ module.exports = class extends Generator {
       }
     };
 
-    if (this.test == "one"){
-        copyOpts.globOptions.ignore.push("two.js")
-    }else{
-        copyOpts.globOptions.ignore.push("one.js")
+    if (this.test == "one") {
+      files.push("one.js");
+    } else {
+      files.push("two.js");
     }
 
-
-    // if (!this.docker) {
+    // If (!this.docker) {
     //   copyOpts.globOptions.ignore.push(src + "/+(Dockerfile|.dockerignore)");
     // }
 
-    //this.fs.copy(src, dest, copyOpts);
+    // this.fs.copy(src, dest, copyOpts);
     // this.fs.copy(this.templatePath(""), dest, copyOpts);
 
     const opts = {
@@ -115,11 +113,11 @@ module.exports = class extends Generator {
       title: this.name,
       description: this.description,
       version: this.version,
-      apiRoot: this.apiRoot,
+      apiRoot: this.apiRoot
     };
 
     files.forEach(f => {
-        this.log(f)
+      this.log(f);
       this.fs.copyTpl(
         this.templatePath(f),
         this.destinationPath(`${this.name}/${f}`),
@@ -128,7 +126,7 @@ module.exports = class extends Generator {
       );
     });
 
-    // this.fs.move(
+    // This.fs.move(
     //   this.destinationPath(`${this.name}`, "gitignore"),
     //   this.destinationPath(`${this.name}`, ".gitignore")
     // );
@@ -140,18 +138,18 @@ module.exports = class extends Generator {
     // }
   }
 
-//   install() {
-//     const appDir = path.join(process.cwd(), this.name);
-//     process.chdir(appDir);
-//     if (this.useYarn) {
-//       this.yarnInstall();
-//     } else {
-//       this.npmInstall();
-//     }
-//   }
+  //   Install() {
+  //     const appDir = path.join(process.cwd(), this.name);
+  //     process.chdir(appDir);
+  //     if (this.useYarn) {
+  //       this.yarnInstall();
+  //     } else {
+  //       this.npmInstall();
+  //     }
+  //   }
 
   end() {
-    // if (this.useYarn) {
+    // If (this.useYarn) {
     //   this.spawnCommandSync("yarn", ["lint:fix"]);
     // } else {
     //   this.spawnCommandSync("npm", ["run", "lint:fix"]);
