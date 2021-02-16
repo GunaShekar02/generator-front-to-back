@@ -218,7 +218,7 @@ module.exports = class extends Generator {
       }
     }
     if (this.type === "frontend" || this.type === "fullstack") {
-      const appDir = path.join(process.cwd(), `${this.name}/frontend`);
+      const appDir = path.join(process.cwd(), `../frontend`);
       process.chdir(appDir);
       if (this.useYarn) {
         this.yarnInstall();
