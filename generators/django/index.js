@@ -21,12 +21,22 @@ module.exports = class extends Generator {
     this.log(
       yosay(
         `Welcome to the supreme ${chalk.red(
-          "generator-fullstack-bootstrapper"
-        )} generator!`
+          "generator-front-to-back"
+        )} generator, Django+React version!`
       )
     );
 
     const prompts = [
+      {
+        type: "list",
+        name: "stack",
+        message: `Would you like Django or Django + React`,
+        choices: [
+          { name: "Django", value: "django" },
+          { name: "Django + React", value: "django_react" }
+        ],
+        default: "django"
+      },
       {
         type: "input",
         name: "description",
@@ -41,16 +51,6 @@ module.exports = class extends Generator {
         type: "input",
         name: "apiVersion",
         message: `Version [${this.version}]`
-      },
-      {
-        type: "list",
-        name: "stack",
-        message: `Would you like Django or Django + React`,
-        choices: [
-          { name: "Django", value: "django" },
-          { name: "Django + React", value: "django_react" }        
-        ],
-        default: "django"
       }
     ];
 
@@ -64,6 +64,7 @@ module.exports = class extends Generator {
 
     return await this.prompt(prompts).then(r => {
       this.name = r.name ? r.name : this.name;
+      this.stack = r.stack;
       this.description = r.description ? r.description : this.description;
       this.version = r.version ? r.version : this.version;
       this.apiRoot = r.apiRoot ? r.apiRoot.replace(/^\/?/, "/") : this.apiRoot;
@@ -100,7 +101,7 @@ module.exports = class extends Generator {
       }
     };
 
-    if (this.test == "django") {
+    if (this.stack == "django") {
       files.push("django/");
     } else {
       files.push("django-react/");

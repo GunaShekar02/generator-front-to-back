@@ -26,7 +26,7 @@ module.exports = class extends Generator {
       yosay(
         `Welcome to the supreme ${chalk.red(
           "generator-fullstack-bootstrapper"
-        )} generator!`
+        )} generator`
       )
     );
 
