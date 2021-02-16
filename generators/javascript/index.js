@@ -102,6 +102,7 @@ module.exports = class extends Generator {
       this.log("You have chosen " + chalk.red(r.type));
 
       this.name = r.name ? r.name : this.name;
+      this.type = r.type;
       this.description = r.description ? r.description : this.description;
       this.version = r.version ? r.version : this.version;
       this.apiRoot = r.apiRoot ? r.apiRoot.replace(/^\/?/, "/") : this.apiRoot;
@@ -111,7 +112,25 @@ module.exports = class extends Generator {
   }
 
   writing() {
-    if (this.type == "fullstack" || this.type == "backend") {
+    this.log("In writing");
+    if (this.type === "fullstack" || this.type === "frontend") {
+      this.log("In frontend");
+      const src = this.sourceRoot() + "/frontend/**";
+      const dest = this.destinationPath(`${this.name}/frontend`);
+      this.log(src, dest);
+      const copyOpts = {
+        globOptions: {
+          ignore: []
+        }
+      };
+      this.log("Copy starting!");
+      this.fs.copy(src, dest, copyOpts);
+      // this.fs.copy(this.templatePath("frontend/.*"), dest, copyOpts);
+      this.log("Copy done!");
+    }
+    if (this.type === "fullstack" || this.type === "backend") {
+      this.log("In backend");
+
       const src = this.sourceRoot() + "/backend/**";
       const dest = this.destinationPath(`${this.name}/backend`);
       const files = [
@@ -184,10 +203,12 @@ module.exports = class extends Generator {
         );
       }
     }
+    this.log("outside");
   }
 
   install() {
-    if (this.type == "backend" || this.type == "fullstack") {
+    this.log("In Install");
+    if (this.type === "backend" || this.type === "fullstack") {
       const appDir = path.join(process.cwd(), `${this.name}/backend`);
       process.chdir(appDir);
       if (this.useYarn) {
@@ -196,13 +217,14 @@ module.exports = class extends Generator {
         this.npmInstall();
       }
     }
-  }
-
-  end() {
-    if (this.useYarn) {
-      this.spawnCommandSync("yarn", ["lint:fix"]);
-    } else {
-      this.spawnCommandSync("npm", ["run", "lint:fix"]);
+    if (this.type === "frontend" || this.type === "fullstack") {
+      const appDir = path.join(process.cwd(), `${this.name}/frontend`);
+      process.chdir(appDir);
+      if (this.useYarn) {
+        this.yarnInstall();
+      } else {
+        this.npmInstall();
+      }
     }
   }
 };
