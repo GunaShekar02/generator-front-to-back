@@ -43,9 +43,14 @@ module.exports = class extends Generator {
         message: `Version [${this.version}]`
       },
       {
-        type: "input",
-        name: "test",
-        message: "Which file"
+        type: "list",
+        name: "stack",
+        message: `Would you like Django or Django + React`,
+        choices: [
+          { name: "Django", value: "django" },
+          { name: "Django + React", value: "django_react" }        
+        ],
+        default: "django"
       }
     ];
 
@@ -95,10 +100,10 @@ module.exports = class extends Generator {
       }
     };
 
-    if (this.test == "one") {
-      files.push("one.js");
+    if (this.test == "django") {
+      files.push("django/");
     } else {
-      files.push("two.js");
+      files.push("django-react/");
     }
 
     // If (!this.docker) {
