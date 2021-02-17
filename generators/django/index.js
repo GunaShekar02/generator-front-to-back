@@ -48,7 +48,7 @@ module.exports = class extends Generator {
         message: `Would you like Django or Django + React`,
         choices: [
           { name: "Django", value: "django" },
-          { name: "Django + React", value: "django_react" }        
+          { name: "Django + React", value: "django_react" }
         ],
         default: "django"
       }
