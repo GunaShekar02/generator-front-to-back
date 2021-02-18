@@ -1,5 +1,8 @@
 import Express from 'express';
+<% if (authentication === 'session') { %>
+import session from 'express-session';
 import cookieParser from 'cookie-parser';
+<% } %>
 import * as path from 'path';
 import * as bodyParser from 'body-parser';
 import * as http from 'http';
@@ -25,7 +28,15 @@ export default class ExpressServer {
     app.use(bodyParser.json({ limit: process.env.REQUEST_LIMIT || '100kb' }));
     app.use(bodyParser.urlencoded({ extended: true, limit: process.env.REQUEST_LIMIT || '100kb' }));
     app.use(bodyParser.text({ limit: process.env.REQUEST_LIMIT || '100kb'}));
+<% if (authentication === 'session') { %>
     app.use(cookieParser(process.env.SESSION_SECRET));
+    app.use(session({
+      secret: process.env.SESSION_SECRET,
+      resave: false,
+      saveUninitialized: true,
+      cookie: { maxAge: 360000 }
+    }));    
+<% } %>
     app.use(Express.static(`${root}/public`));
 <% if (specification === 'openapi_3') { %>
     app.use(process.env.OPENAPI_SPEC || '/spec', Express.static(apiSpec));

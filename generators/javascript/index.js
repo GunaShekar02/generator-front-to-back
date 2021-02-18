@@ -30,7 +30,7 @@ module.exports = class extends Generator {
       )
     );
 
-    const prompts = [
+    const initialPrompts = [
       {
         type: "list",
         name: "type",
@@ -44,7 +44,10 @@ module.exports = class extends Generator {
           }
         ],
         default: "fullstack"
-      },
+      }
+    ];
+
+    const backendPrompts = [
       {
         type: "input",
         name: "description",
@@ -59,6 +62,17 @@ module.exports = class extends Generator {
         type: "input",
         name: "apiVersion",
         message: `Version [${this.version}]`
+      },
+      {
+        type: "list",
+        name: "authentication",
+        message: `What kind of authentication would you like in your app?`,
+        choices: [
+          { name: "JSON Web Token", value: "jwt" },
+          { name: "Session Based", value: "session" },
+          { name: "None", value: "none" }
+        ],
+        default: "jwt"
       },
       {
         type: "list",
@@ -82,30 +96,27 @@ module.exports = class extends Generator {
       }
     ];
 
-    prompts.forEach(
+    backendPrompts.forEach(
       prompt =>
         (prompt.when = answers =>
           answers.type === "backend" || answers.type === "fullstack")
     );
 
-    delete prompts[0].when;
-
     if (!this.options.appname) {
-      prompts.unshift({
+      initialPrompts.unshift({
         type: "input",
         name: "name",
         message: `App name [${this.name}]`
       });
     }
 
-    return await this.prompt(prompts).then(r => {
-      this.log("You have chosen " + chalk.red(r.type));
-
+    return await this.prompt([...initialPrompts, ...backendPrompts]).then(r => {
       this.name = r.name ? r.name : this.name;
       this.type = r.type;
       this.description = r.description ? r.description : this.description;
       this.version = r.version ? r.version : this.version;
       this.apiRoot = r.apiRoot ? r.apiRoot.replace(/^\/?/, "/") : this.apiRoot;
+      this.authentication = r.authentication;
       this.linter = r.linter;
       this.specification = r.specification;
     });
@@ -125,7 +136,6 @@ module.exports = class extends Generator {
       };
       this.log("Copy starting!");
       this.fs.copy(src, dest, copyOpts);
-      // this.fs.copy(this.templatePath("frontend/.*"), dest, copyOpts);
       this.log("Copy done!");
     }
     if (this.type === "fullstack" || this.type === "backend") {
@@ -166,6 +176,28 @@ module.exports = class extends Generator {
       if (!this.docker) {
         copyOpts.globOptions.ignore.push(src + "/+(Dockerfile|.dockerignore)");
       }
+      if (this.authentication === "none") {
+        copyOpts.globOptions.ignore.push(
+          src + "/server/api/middlewares/isAuthenticated.session.js"
+        );
+        copyOpts.globOptions.ignore.push(
+          src + "/server/api/middlewares/isAuthenticated.jwt.js"
+        );
+        copyOpts.globOptions.ignore.push(
+          src + "/server/api/services/authentication.service.js"
+        );
+      } else if (this.authentication === "session") {
+        copyOpts.globOptions.ignore.push(
+          src + "/server/api/services/authentication.service.js"
+        );
+        copyOpts.globOptions.ignore.push(
+          src + "/server/api/middlewares/isAuthenticated.jwt.js"
+        );
+      } else {
+        copyOpts.globOptions.ignore.push(
+          src + "/server/api/middlewares/isAuthenticated.session.js"
+        );
+      }
 
       this.fs.copy(src, dest, copyOpts);
       this.fs.copy(this.templatePath("backend/.*"), dest, copyOpts);
@@ -176,6 +208,7 @@ module.exports = class extends Generator {
         description: this.description,
         version: this.version,
         apiRoot: this.apiRoot,
+        authentication: this.authentication,
         linter: this.linter,
         specification: this.specification
       };
