@@ -13,7 +13,8 @@ function App() {
     axios.get(`${process.env.REACT_APP_HOST_IP_ADDRESS}/api/posts`)
       .then((res) => {
         setData(res.data);
-        console.log(data)
+        console.log(data);
+        console.log(process.env.REACT_APP_HOST_IP_ADDRESS)
         setLoading(false);
       })
   }, [])
