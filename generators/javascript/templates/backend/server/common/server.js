@@ -3,6 +3,9 @@ import Express from 'express';
 import session from 'express-session';
 import cookieParser from 'cookie-parser';
 <% } %>
+<% if(cors) { %>
+import cors from 'cors';
+<% } %>
 import * as path from 'path';
 import * as bodyParser from 'body-parser';
 import * as http from 'http';
@@ -51,6 +54,9 @@ export default class ExpressServer {
         ignorePaths: /.*\/spec(\/|$)/,
       })
     );
+<% } %>
+<% if(cors) { %>
+    app.use(cors());
 <% } %>
   }
 
