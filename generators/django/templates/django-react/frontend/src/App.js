@@ -9,6 +9,7 @@ function App() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    
     axios.get(`${process.env.REACT_APP_HOST_IP_ADDRESS}/api/posts`)
       .then((res) => {
         setData(res.data);

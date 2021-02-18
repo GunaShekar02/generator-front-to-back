@@ -5,7 +5,7 @@ version: '3'
 services:
   backend:
     build:
-      context: ./backend/api
+      context: ./backend
       # args:
       #   # DJANGO_ALLOWED_HOSTS: *
       #   # DJANGO_SECRET_KEY: *
@@ -18,7 +18,7 @@ services:
     build:
       context: ./frontend
       args:
-        API_URL: http://localhost:8000
+        API_URL: http://localhost:80
     volumes:
       - build_folder:/frontend/build
   nginx:
