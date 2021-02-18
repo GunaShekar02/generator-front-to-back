@@ -213,11 +213,15 @@ module.exports = class extends Generator {
 
       if (this.database === "mongo") {
         copyOpts.globOptions.ignore.push(src + "/server/common/sequelize.js");
+        copyOpts.globOptions.ignore.push(src + "/server/models/User.js");
       } else if (this.database === "sql") {
         copyOpts.globOptions.ignore.push(src + "/server/common/mongo.js");
+        copyOpts.globOptions.ignore.push(src + "/server/models/UserModel.js");
       } else {
         copyOpts.globOptions.ignore.push(src + "/server/common/sequelize.js");
         copyOpts.globOptions.ignore.push(src + "/server/common/mongo.js");
+        copyOpts.globOptions.ignore.push(src + "/server/models/User.js");
+        copyOpts.globOptions.ignore.push(src + "/server/models/UserModel.js");
       }
 
       this.fs.copy(src, dest, copyOpts);
