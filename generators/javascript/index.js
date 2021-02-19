@@ -47,6 +47,21 @@ module.exports = class extends Generator {
       }
     ];
 
+    const frontendPrompts = [
+      {
+        type: "confirm",
+        name: "router",
+        message: "Would you like to install React Router?",
+        default: true
+      }
+    ];
+
+    frontendPrompts.forEach(
+      prompt =>
+        (prompt.when = answers =>
+          answers.type === "frontend" || answers.type === "fullstack")
+    );
+
     const backendPrompts = [
       {
         type: "input",
@@ -127,9 +142,14 @@ module.exports = class extends Generator {
       });
     }
 
-    return await this.prompt([...initialPrompts, ...backendPrompts]).then(r => {
+    return await this.prompt([
+      ...initialPrompts,
+      ...frontendPrompts,
+      ...backendPrompts
+    ]).then(r => {
       this.name = r.name ? r.name : this.name;
       this.type = r.type;
+      this.router = r.router;
       this.description = r.description ? r.description : this.description;
       this.version = r.version ? r.version : this.version;
       this.apiRoot = r.apiRoot ? r.apiRoot.replace(/^\/?/, "/") : this.apiRoot;
@@ -152,8 +172,25 @@ module.exports = class extends Generator {
           ignore: []
         }
       };
+
       this.log("Copy starting!");
       this.fs.copy(src, dest, copyOpts);
+
+      const files = ["package.json", "src/App.js", "src/index.js"];
+
+      const opts = {
+        router: this.router
+      };
+
+      files.forEach(f => {
+        this.fs.copyTpl(
+          this.templatePath(`frontend/${f}`),
+          this.destinationPath(`${this.name}/frontend/${f}`),
+          opts,
+          copyOpts
+        );
+      });
+
       this.log("Copy done!");
     }
     if (this.type === "fullstack" || this.type === "backend") {
