@@ -147,7 +147,6 @@ module.exports = class extends Generator {
       this.log("In frontend");
       const src = this.sourceRoot() + "/frontend/**";
       const dest = this.destinationPath(`${this.name}/frontend`);
-      this.log(src, dest);
       const copyOpts = {
         globOptions: {
           ignore: []
@@ -275,8 +274,9 @@ module.exports = class extends Generator {
 
   install() {
     this.log("In Install");
+    let appDir;
     if (this.type === "backend" || this.type === "fullstack") {
-      const appDir = path.join(process.cwd(), `${this.name}/backend`);
+      appDir = path.join(process.cwd(), `${this.name}/backend`);
       process.chdir(appDir);
       if (this.useYarn) {
         this.yarnInstall();
@@ -285,7 +285,8 @@ module.exports = class extends Generator {
       }
     }
     if (this.type === "frontend" || this.type === "fullstack") {
-      const appDir = path.join(process.cwd(), `../frontend`);
+      if (appDir) appDir = path.join(process.cwd(), `../frontend`);
+      else appDir = path.join(process.cwd(), `${this.name}/frontend`);
       process.chdir(appDir);
       if (this.useYarn) {
         this.yarnInstall();
