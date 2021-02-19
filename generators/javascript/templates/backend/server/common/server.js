@@ -13,6 +13,10 @@ import errorHandler from '../api/middlewares/error.handler'
 <% } else { %>
 import oas from './swagger';
 <% } %>
+<% if (database === 'mongo') { %>
+import mongo from "./mongo";
+<% } %>
+
 const app = new Express();
 
 export default class ExpressServer {
@@ -68,15 +72,30 @@ export default class ExpressServer {
           'development'} @: ${os.hostname()} on port: ${p}}`
       );
 <% if (specification === 'openapi_3') { %>
-    http.createServer(app).listen(port, welcome(port));
-<% } else { %>
-    oas(app, this.routes).then(() => {
+  <% if (database === 'mongo') { %>
+    mongo().then(() => {
+      l.info("Database Loaded!");
       http.createServer(app).listen(port, welcome(port));
-    }).catch(e => {
-      l.error(e);
-      // eslint-disable-next-line no-process-exit
-      process.exit(1)
     });
+  <% } else { %>
+    http.createServer(app).listen(port, welcome(port));
+  <% } %>
+<% } else { %>
+    oas(app, this.routes)
+      .then(() => {
+<% if (database === 'mongo') { %>
+        mongo().then(() => {
+          l.info("Database Loaded!");
+          http.createServer(app).listen(port, welcome(port));
+        });
+<% } else { %>
+        http.createServer(app).listen(port, welcome(port));
+<% } %>
+      })
+      .catch((e) => {
+        l.error(e);
+        exit(1);
+      });
 <% } %>
     return app;
   }

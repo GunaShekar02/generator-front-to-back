@@ -76,6 +76,17 @@ module.exports = class extends Generator {
       },
       {
         type: "list",
+        name: "database",
+        message: `What kind of database would you like in your app?`,
+        choices: [
+          { name: "SQL (MySQL + Sequelize)", value: "sql" },
+          { name: "No-SQL (MongoDB + Mongoose)", value: "mongo" },
+          { name: "None", value: "none" }
+        ],
+        default: "sql"
+      },
+      {
+        type: "list",
         name: "specification",
         message: `OpenAPI spec version`,
         choices: [
@@ -117,6 +128,7 @@ module.exports = class extends Generator {
       this.version = r.version ? r.version : this.version;
       this.apiRoot = r.apiRoot ? r.apiRoot.replace(/^\/?/, "/") : this.apiRoot;
       this.authentication = r.authentication;
+      this.database = r.database;
       this.linter = r.linter;
       this.specification = r.specification;
     });
@@ -199,6 +211,19 @@ module.exports = class extends Generator {
         );
       }
 
+      if (this.database === "mongo") {
+        copyOpts.globOptions.ignore.push(src + "/server/common/sequelize.js");
+        copyOpts.globOptions.ignore.push(src + "/server/models/User.js");
+      } else if (this.database === "sql") {
+        copyOpts.globOptions.ignore.push(src + "/server/common/mongo.js");
+        copyOpts.globOptions.ignore.push(src + "/server/models/UserModel.js");
+      } else {
+        copyOpts.globOptions.ignore.push(src + "/server/common/sequelize.js");
+        copyOpts.globOptions.ignore.push(src + "/server/common/mongo.js");
+        copyOpts.globOptions.ignore.push(src + "/server/models/User.js");
+        copyOpts.globOptions.ignore.push(src + "/server/models/UserModel.js");
+      }
+
       this.fs.copy(src, dest, copyOpts);
       this.fs.copy(this.templatePath("backend/.*"), dest, copyOpts);
 
@@ -209,6 +234,7 @@ module.exports = class extends Generator {
         version: this.version,
         apiRoot: this.apiRoot,
         authentication: this.authentication,
+        database: this.database,
         linter: this.linter,
         specification: this.specification
       };
