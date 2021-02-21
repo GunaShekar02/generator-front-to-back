@@ -86,6 +86,12 @@ module.exports = class extends Generator {
         default: "sql"
       },
       {
+        type: "confirm",
+        name: "cors",
+        message: "Would you like to install CORS?",
+        default: true
+      },
+      {
         type: "list",
         name: "specification",
         message: `OpenAPI spec version`,
@@ -129,6 +135,7 @@ module.exports = class extends Generator {
       this.apiRoot = r.apiRoot ? r.apiRoot.replace(/^\/?/, "/") : this.apiRoot;
       this.authentication = r.authentication;
       this.database = r.database;
+      this.cors = r.cors;
       this.linter = r.linter;
       this.specification = r.specification;
     });
@@ -235,6 +242,7 @@ module.exports = class extends Generator {
         apiRoot: this.apiRoot,
         authentication: this.authentication,
         database: this.database,
+        cors: this.cors,
         linter: this.linter,
         specification: this.specification
       };

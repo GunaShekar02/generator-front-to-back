@@ -18,6 +18,9 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "pino": "^6.10.0",
+    <% if(cors) { %>
+    "cors": "^2.8.5",
+    <% } %>
     <% if (database === 'mongo') { %>
     "mongoose": "^5.11.17",
     <% } else if (database === 'sql') { %>
