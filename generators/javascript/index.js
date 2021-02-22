@@ -53,6 +53,12 @@ module.exports = class extends Generator {
         name: "router",
         message: "Would you like to install React Router?",
         default: true
+      },
+      {
+        type: "confirm",
+        name: "redux",
+        message: "Would you like to install Redux?",
+        default: true
       }
     ];
 
@@ -150,6 +156,7 @@ module.exports = class extends Generator {
       this.name = r.name ? r.name : this.name;
       this.type = r.type;
       this.router = r.router;
+      this.redux = r.redux;
       this.description = r.description ? r.description : this.description;
       this.version = r.version ? r.version : this.version;
       this.apiRoot = r.apiRoot ? r.apiRoot.replace(/^\/?/, "/") : this.apiRoot;
@@ -173,13 +180,27 @@ module.exports = class extends Generator {
         }
       };
 
+      if (!this.redux) {
+        copyOpts.globOptions.ignore.push(src + "/src/Redux/ActionTypes.js");
+        copyOpts.globOptions.ignore.push(src + "/src/Redux/ConfigureStore.js");
+        copyOpts.globOptions.ignore.push(
+          src + "/src/Redux/Reducers/example.reducer.js"
+        );
+      }
+
       this.log("Copy starting!");
       this.fs.copy(src, dest, copyOpts);
 
-      const files = ["package.json", "src/App.js", "src/index.js"];
+      const files = [
+        "package.json",
+        "src/App.js",
+        "src/index.js",
+        "src/Containers/Home/Home.js"
+      ];
 
       const opts = {
-        router: this.router
+        router: this.router,
+        redux: this.redux
       };
 
       files.forEach(f => {

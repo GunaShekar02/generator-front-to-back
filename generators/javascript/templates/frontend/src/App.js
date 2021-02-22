@@ -1,6 +1,7 @@
 import React from "react";
+<% if (router) { %>
 import { Switch, Route } from "react-router-dom";
-
+<% } %>
 import Home from "./Containers/Home";
 
 const App = () => {
