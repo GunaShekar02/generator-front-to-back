@@ -32,6 +32,11 @@ module.exports = class extends Generator {
 
     const initialPrompts = [
       {
+        type: "input",
+        name: "description",
+        message: `App description [${this.description}]`
+      },
+      {
         type: "list",
         name: "type",
         message: `What kind of an app would you like?`,
@@ -59,6 +64,13 @@ module.exports = class extends Generator {
         name: "redux",
         message: "Would you like to install Redux?",
         default: true
+      },
+      {
+        type: "confirm",
+        name: "axios",
+        message:
+          "Would you like to install Axios to connect to a backend server?",
+        default: true
       }
     ];
 
@@ -69,11 +81,6 @@ module.exports = class extends Generator {
     );
 
     const backendPrompts = [
-      {
-        type: "input",
-        name: "description",
-        message: `App description [${this.description}]`
-      },
       {
         type: "input",
         name: "apiRoot",
@@ -157,6 +164,7 @@ module.exports = class extends Generator {
       this.type = r.type;
       this.router = r.router;
       this.redux = r.redux;
+      this.axios = r.axios;
       this.description = r.description ? r.description : this.description;
       this.version = r.version ? r.version : this.version;
       this.apiRoot = r.apiRoot ? r.apiRoot.replace(/^\/?/, "/") : this.apiRoot;
@@ -169,9 +177,8 @@ module.exports = class extends Generator {
   }
 
   writing() {
-    this.log("In writing");
+    this.log(chalk.blue("Setting up required files..."));
     if (this.type === "fullstack" || this.type === "frontend") {
-      this.log("In frontend");
       const src = this.sourceRoot() + "/frontend/**";
       const dest = this.destinationPath(`${this.name}/frontend`);
       const copyOpts = {
@@ -187,8 +194,13 @@ module.exports = class extends Generator {
           src + "/src/Redux/Reducers/example.reducer.js"
         );
       }
+      if (!this.axios) {
+        copyOpts.globOptions.ignore.push(
+          src + "/src/Services/example.service.js"
+        );
+        copyOpts.globOptions.ignore.push(src + "/src/Utils/constants.js");
+      }
 
-      this.log("Copy starting!");
       this.fs.copy(src, dest, copyOpts);
 
       const files = [
@@ -200,7 +212,8 @@ module.exports = class extends Generator {
 
       const opts = {
         router: this.router,
-        redux: this.redux
+        redux: this.redux,
+        axios: this.axios
       };
 
       files.forEach(f => {
@@ -211,12 +224,8 @@ module.exports = class extends Generator {
           copyOpts
         );
       });
-
-      this.log("Copy done!");
     }
     if (this.type === "fullstack" || this.type === "backend") {
-      this.log("In backend");
-
       const src = this.sourceRoot() + "/backend/**";
       const dest = this.destinationPath(`${this.name}/backend`);
       const files = [
@@ -327,11 +336,10 @@ module.exports = class extends Generator {
         );
       }
     }
-    this.log("outside");
   }
 
   install() {
-    this.log("In Install");
+    this.log(chalk.blue("Installing backend dependencies..."));
     let appDir;
     if (this.type === "backend" || this.type === "fullstack") {
       appDir = path.join(process.cwd(), `${this.name}/backend`);
@@ -342,9 +350,15 @@ module.exports = class extends Generator {
         this.npmInstall();
       }
     }
+  }
+
+  end() {
+    this.log(chalk.blue("Installing frontend dependencies..."));
+    let appDir = process.cwd();
+    if (appDir.includes(this.name))
+      appDir = path.join(process.cwd(), `../frontend`);
+    else appDir = path.join(process.cwd(), `${this.name}/frontend`);
     if (this.type === "frontend" || this.type === "fullstack") {
-      if (appDir) appDir = path.join(process.cwd(), `../frontend`);
-      else appDir = path.join(process.cwd(), `${this.name}/frontend`);
       process.chdir(appDir);
       if (this.useYarn) {
         this.yarnInstall();
