@@ -1,8 +1,8 @@
 {
   "name": "generator-front-to-back",
   "version": "0.0.0",
-  "description": "Fullstack bootstrapper",
-  "homepage": "",
+  "description": "Generates a fullstack application template. Available for Javascript and Python.",
+  "homepage": "https://github.com/GunaShekar02/generator-front-to-back",
   "author": {
     "name": "Guna Shekar",
     "email": "gunashekherproddatoori@gmail.com",
@@ -75,6 +75,6 @@
     "pretest": "eslint .",
     "test": "jest"
   },
-  "repository": "GunaShekar02/generator-fullstack-bootstrapper",
+  "repository": "GunaShekar02/generator-front-to-back",
   "license": "MIT"
 }
