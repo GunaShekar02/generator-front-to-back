@@ -32,6 +32,11 @@ module.exports = class extends Generator {
 
     const initialPrompts = [
       {
+        type: "input",
+        name: "description",
+        message: `App description [${this.description}]`
+      },
+      {
         type: "list",
         name: "type",
         message: `What kind of an app would you like?`,
@@ -47,12 +52,35 @@ module.exports = class extends Generator {
       }
     ];
 
-    const backendPrompts = [
+    const frontendPrompts = [
       {
-        type: "input",
-        name: "description",
-        message: `App description [${this.description}]`
+        type: "confirm",
+        name: "router",
+        message: "Would you like to install React Router?",
+        default: true
       },
+      {
+        type: "confirm",
+        name: "redux",
+        message: "Would you like to install Redux?",
+        default: true
+      },
+      {
+        type: "confirm",
+        name: "axios",
+        message:
+          "Would you like to install Axios to connect to a backend server?",
+        default: true
+      }
+    ];
+
+    frontendPrompts.forEach(
+      prompt =>
+        (prompt.when = answers =>
+          answers.type === "frontend" || answers.type === "fullstack")
+    );
+
+    const backendPrompts = [
       {
         type: "input",
         name: "apiRoot",
@@ -127,9 +155,16 @@ module.exports = class extends Generator {
       });
     }
 
-    return await this.prompt([...initialPrompts, ...backendPrompts]).then(r => {
+    return await this.prompt([
+      ...initialPrompts,
+      ...frontendPrompts,
+      ...backendPrompts
+    ]).then(r => {
       this.name = r.name ? r.name : this.name;
       this.type = r.type;
+      this.router = r.router;
+      this.redux = r.redux;
+      this.axios = r.axios;
       this.description = r.description ? r.description : this.description;
       this.version = r.version ? r.version : this.version;
       this.apiRoot = r.apiRoot ? r.apiRoot.replace(/^\/?/, "/") : this.apiRoot;
@@ -142,24 +177,55 @@ module.exports = class extends Generator {
   }
 
   writing() {
-    this.log("In writing");
+    this.log(chalk.blue("Setting up required files..."));
     if (this.type === "fullstack" || this.type === "frontend") {
-      this.log("In frontend");
       const src = this.sourceRoot() + "/frontend/**";
       const dest = this.destinationPath(`${this.name}/frontend`);
-      this.log(src, dest);
       const copyOpts = {
         globOptions: {
           ignore: []
         }
       };
-      this.log("Copy starting!");
+
+      if (!this.redux) {
+        copyOpts.globOptions.ignore.push(src + "/src/Redux/ActionTypes.js");
+        copyOpts.globOptions.ignore.push(src + "/src/Redux/ConfigureStore.js");
+        copyOpts.globOptions.ignore.push(
+          src + "/src/Redux/Reducers/example.reducer.js"
+        );
+      }
+      if (!this.axios) {
+        copyOpts.globOptions.ignore.push(
+          src + "/src/Services/example.service.js"
+        );
+        copyOpts.globOptions.ignore.push(src + "/src/Utils/constants.js");
+      }
+
       this.fs.copy(src, dest, copyOpts);
-      this.log("Copy done!");
+
+      const files = [
+        "package.json",
+        "src/App.js",
+        "src/index.js",
+        "src/Containers/Home/Home.js"
+      ];
+
+      const opts = {
+        router: this.router,
+        redux: this.redux,
+        axios: this.axios
+      };
+
+      files.forEach(f => {
+        this.fs.copyTpl(
+          this.templatePath(`frontend/${f}`),
+          this.destinationPath(`${this.name}/frontend/${f}`),
+          opts,
+          copyOpts
+        );
+      });
     }
     if (this.type === "fullstack" || this.type === "backend") {
-      this.log("In backend");
-
       const src = this.sourceRoot() + "/backend/**";
       const dest = this.destinationPath(`${this.name}/backend`);
       const files = [
@@ -270,13 +336,13 @@ module.exports = class extends Generator {
         );
       }
     }
-    this.log("outside");
   }
 
   install() {
-    this.log("In Install");
+    this.log(chalk.blue("Installing backend dependencies..."));
+    let appDir;
     if (this.type === "backend" || this.type === "fullstack") {
-      const appDir = path.join(process.cwd(), `${this.name}/backend`);
+      appDir = path.join(process.cwd(), `${this.name}/backend`);
       process.chdir(appDir);
       if (this.useYarn) {
         this.yarnInstall();
@@ -284,8 +350,15 @@ module.exports = class extends Generator {
         this.npmInstall();
       }
     }
+  }
+
+  end() {
+    this.log(chalk.blue("Installing frontend dependencies..."));
+    let appDir = process.cwd();
+    if (appDir.includes(this.name))
+      appDir = path.join(process.cwd(), `../frontend`);
+    else appDir = path.join(process.cwd(), `${this.name}/frontend`);
     if (this.type === "frontend" || this.type === "fullstack") {
-      const appDir = path.join(process.cwd(), `../frontend`);
       process.chdir(appDir);
       if (this.useYarn) {
         this.yarnInstall();
