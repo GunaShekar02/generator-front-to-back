@@ -5,6 +5,9 @@ const yosay = require("yosay");
 const path = require("path");
 
 module.exports = class extends Generator {
+  /**
+   * Set a few default values for the configurations.
+   */
   constructor(args, opts) {
     super(args, opts);
     this.argument("appname", { type: String, required: false });
@@ -20,8 +23,11 @@ module.exports = class extends Generator {
     this.specification = "openapi_3";
   }
 
+  /**
+   * Ask the user for their desired configuration and save those options in the class context.
+   */
   async prompting() {
-    // Have Yeoman greet the user.
+    // Welcome the users!
     this.log(
       yosay(
         `Welcome to the supreme ${chalk.red(
@@ -30,6 +36,7 @@ module.exports = class extends Generator {
       )
     );
 
+    // Initial prompts required for all apps, i.e., name, description and type of app.
     const initialPrompts = [
       {
         type: "input",
@@ -52,6 +59,7 @@ module.exports = class extends Generator {
       }
     ];
 
+    //Configuration required only by the frontend apps.
     const frontendPrompts = [
       {
         type: "confirm",
@@ -80,6 +88,7 @@ module.exports = class extends Generator {
           answers.type === "frontend" || answers.type === "fullstack")
     );
 
+    //Configuration required only by the backend apps.
     const backendPrompts = [
       {
         type: "input",
@@ -155,6 +164,7 @@ module.exports = class extends Generator {
       });
     }
 
+    //Save user answers in the class context.
     return await this.prompt([
       ...initialPrompts,
       ...frontendPrompts,
@@ -176,11 +186,16 @@ module.exports = class extends Generator {
     });
   }
 
+  /**
+   * Create the template files and save them in appropriate directories.
+   */
   writing() {
     this.log(chalk.blue("Setting up required files..."));
+    //Only for frontend apps.
     if (this.type === "fullstack" || this.type === "frontend") {
       const src = this.sourceRoot() + "/frontend/**";
       const dest = this.destinationPath(`${this.name}/frontend`);
+      //The ignore array is used to ignore files, push file names into this array that you want to ignore.
       const copyOpts = {
         globOptions: {
           ignore: []
@@ -210,6 +225,8 @@ module.exports = class extends Generator {
         "src/Containers/Home/Home.js"
       ];
 
+      //You can pass parameters to files and use them in EJS style. Use this.fs.copyTpl
+      //to pass parameters into files.
       const opts = {
         router: this.router,
         redux: this.redux,
@@ -225,6 +242,8 @@ module.exports = class extends Generator {
         );
       });
     }
+
+    //Only for backend apps.
     if (this.type === "fullstack" || this.type === "backend") {
       const src = this.sourceRoot() + "/backend/**";
       const dest = this.destinationPath(`${this.name}/backend`);
@@ -339,6 +358,7 @@ module.exports = class extends Generator {
   }
 
   install() {
+    //Install required dependencies for backend apps.
     this.log(chalk.blue("Installing backend dependencies..."));
     let appDir;
     if (this.type === "backend" || this.type === "fullstack") {
@@ -353,6 +373,7 @@ module.exports = class extends Generator {
   }
 
   end() {
+    //Install required dependencies for frontend apps.
     this.log(chalk.blue("Installing frontend dependencies..."));
     let appDir = process.cwd();
     if (appDir.includes(this.name))
