@@ -51,6 +51,12 @@ module.exports = class extends Generator {
         type: "input",
         name: "apiVersion",
         message: `Version [${this.version}]`
+      },
+      {
+        type: "confirm",
+        name: "Docker",
+        message: 'Would you like to include Docker ?',
+        default: true
       }
     ];
 
@@ -69,6 +75,7 @@ module.exports = class extends Generator {
       this.version = r.version ? r.version : this.version;
       this.apiRoot = r.apiRoot ? r.apiRoot.replace(/^\/?/, "/") : this.apiRoot;
       this.test = r.test ? r.test : this.test;
+      this.docker = r.docker;
     });
   }
 
@@ -107,9 +114,9 @@ module.exports = class extends Generator {
       files.push("django-react/");
     }
 
-    // If (!this.docker) {
-    //   copyOpts.globOptions.ignore.push(src + "/+(Dockerfile|.dockerignore)");
-    // }
+    if (!this.docker) {
+      copyOpts.globOptions.ignore.push(src + "/django/mysite/Dockerfile");
+    }
 
     // this.fs.copy(src, dest, copyOpts);
     // this.fs.copy(this.templatePath(""), dest, copyOpts);
@@ -132,16 +139,10 @@ module.exports = class extends Generator {
       );
     });
 
-    // This.fs.move(
+    // this.fs.move(
     //   this.destinationPath(`${this.name}`, "gitignore"),
     //   this.destinationPath(`${this.name}`, ".gitignore")
     // );
-    // if (this.specification !== "openapi_3") {
-    //   this.fs.move(
-    //     this.destinationPath(`${this.name}`, "server/common/api.v2.yml"),
-    //     this.destinationPath(`${this.name}`, "server/common/api.yml")
-    //   );
-    // }
   }
 
   //   Install() {

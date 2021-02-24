@@ -1,0 +1,6 @@
+django-cors-headers==3.5.0
+django-filter==2.4.0
+django==3.1.6
+djangorestframework==3.12.2
+# django-rest-swagger
+drf-yasg==1.20.0
