@@ -17,6 +17,7 @@ services:
   frontend:
     build:
       context: ./frontend
+      #Change the dockerfile below to the other Dockerfile for prod
       dockerfile: DockerFile-dev.dockerfile
       args:
         API_URL: http://localhost:80
