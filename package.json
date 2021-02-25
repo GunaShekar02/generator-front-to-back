@@ -75,6 +75,6 @@
     "pretest": "eslint .",
     "test": "jest"
   },
-  "repository": "GunaShekar02/generator-fullstack-bootstrapper",
+  "repository": "GunaShekar02/generator-front-to-back",
   "license": "MIT"
 }

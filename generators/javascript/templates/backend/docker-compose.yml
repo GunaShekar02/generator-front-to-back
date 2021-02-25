@@ -6,15 +6,19 @@ services:
     build: .
     ports:
       - '3000:3000'
+  <% if (database === "mongo") { %>
     links:
       - mongo
-  <% if (database === "mongo") { %>
   mongo:
     container_name: mongo
     image: mongo
     ports:
       - '27017:27017'
-  <% } else if (database === "mysql") { %>
+  <% } else if (database === "sql") { %>
+    links:
+      - sql
+  sql: 
+    container_name: sql
     image: mysql:5.7
     restart: always
     environment:

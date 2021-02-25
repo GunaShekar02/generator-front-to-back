@@ -1,38 +1,32 @@
-# generator-fullstack-bootstrapper [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-image]][daviddm-url] [![Coverage percentage][coveralls-image]][coveralls-url]
-> Fullstack bootstrapper
+# Generator Front to Back
+
+A fullstack template generator. Get reliable starter templates for your React.js, Node.js, React.js + Node.js, Django, or Django + React.js apps. Configure authentication types, databases and much more in a matter of seconds instead of having to go through the hassle of industry research and setting it up yourselves.
 
 ## Installation
 
-First, install [Yeoman](http://yeoman.io) and generator-fullstack-bootstrapper using [npm](https://www.npmjs.com/) (we assume you have pre-installed [node.js](https://nodejs.org/)).
+First, install [Yeoman](http://yeoman.io) and generator-front-to-back using [npm](https://www.npmjs.com/package/generator-front-to-back) (we assume you have pre-installed [node.js](https://nodejs.org/)).
 
 ```bash
 npm install -g yo
-npm install -g generator-fullstack-bootstrapper
+npm install -g generator-front-to-back
 ```
 
 Then generate your new project:
 
+For React.js, Node.js or React.js + Node.js projects:-
+
 ```bash
-yo fullstack-bootstrapper
+yo front-to-back:javascript
 ```
 
-## Getting To Know Yeoman
+For Django or Django + React.js projects:-
 
- * Yeoman has a heart of gold.
- * Yeoman is a person with feelings and opinions, but is very easy to work with.
- * Yeoman can be too opinionated at times but is easily convinced not to be.
- * Feel free to [learn more about Yeoman](http://yeoman.io/).
+```bash
+yo front-to-back:django
+```
+
+Answer a few simple questions and configure your app in a few seconds!
 
 ## License
 
 MIT © [Guna Shekar]()
-
-
-[npm-image]: https://badge.fury.io/js/generator-fullstack-bootstrapper.svg
-[npm-url]: https://npmjs.org/package/generator-fullstack-bootstrapper
-[travis-image]: https://travis-ci.com/GunaShekar02/generator-fullstack-bootstrapper.svg?branch=master
-[travis-url]: https://travis-ci.com/GunaShekar02/generator-fullstack-bootstrapper
-[daviddm-image]: https://david-dm.org/GunaShekar02/generator-fullstack-bootstrapper.svg?theme=shields.io
-[daviddm-url]: https://david-dm.org/GunaShekar02/generator-fullstack-bootstrapper
-[coveralls-image]: https://coveralls.io/repos/GunaShekar02/generator-fullstack-bootstrapper/badge.svg
-[coveralls-url]: https://coveralls.io/r/GunaShekar02/generator-fullstack-bootstrapper
