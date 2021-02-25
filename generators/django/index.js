@@ -66,7 +66,7 @@ module.exports = class extends Generator {
     ];
 
     const djangoPrompts = [
-      //{
+      // {
       //   type: "list",
       //   name: "stack",
       //   message: `Would you like Django or Django + React`,
@@ -122,34 +122,18 @@ module.exports = class extends Generator {
           console.log(r.djangoprompt);
         });
       }
-
-      return this.prompt(djangoReactPrompts).then(r => {
-        this.docker = r.docker;
-        this.swagger = r.swagger;
-      });
+      else{
+        return this.prompt(djangoReactPrompts).then(r => {
+          this.docker = r.docker;
+          this.swagger = r.swagger;
+        });
+      }
     });
   }
 
   writing() {
     const src = this.sourceRoot() + "/**";
     const dest = this.destinationPath(this.name);
-
-    // Const files = [
-    //   "package.json",
-    //   "README.md",
-    //   ".env",
-    //   ".eslintrc.json",
-    //   "server/routes.js",
-    //   "test/examples.controller.js",
-    //   "server/common/api.yml",
-    //   "server/common/server.js",
-    //   "server/api/middlewares/error.handler.js",
-    //   "server/api/controllers/examples/controller.js",
-    //   "public/api-explorer/index.html",
-    //   "public/api-explorer/swagger-ui-standalone-preset.js",
-    //   "public/index.html",
-    //   "gitignore"
-    // ];
 
     const files = [];
 
@@ -163,33 +147,25 @@ module.exports = class extends Generator {
       // Payas's files
       files.push("django/");
     } else {
-      // My files
-      files.push('django-react/backend/api/');
-      files.push('django-react/backend/requirements.txt');
-      files.push('django-react/frontend/public/');
-      files.push('django-react/frontend/src/');
-      files.push('django-react/frontend/package-lock.json');
-      files.push('django-react/frontend/package.json');
-      files.push('django-react/frontend/README.MD');
-      if (this.docker == "yes"){
-        files.push('django-react/backend/Dockerfile');
-        files.push('django-react/backend/entrypoint.sh');
-        files.push('django-react/frontend/Dockerfile');
-        files.push('django-react/frontend/Dockerfile-dev.dockerfile');
-        files.push('django-react/docker-compose.yml');
-        files.push('django-react/webserver');
+      files.push("django-react/backend/api/");
+      files.push("django-react/backend/requirements.txt");
+      files.push("django-react/frontend/public/");
+      files.push("django-react/frontend/src/");
+      files.push("django-react/frontend/package-lock.json");
+      files.push("django-react/frontend/package.json");
+      files.push("django-react/frontend/README.MD");
+      if (this.docker == "yes") {
+        files.push("django-react/backend/Dockerfile");
+        files.push("django-react/backend/entrypoint.sh");
+        files.push("django-react/frontend/Dockerfile");
+        files.push("django-react/frontend/Dockerfile-dev.dockerfile");
+        files.push("django-react/docker-compose.yml");
+        files.push("django-react/webserver");
       }
     }
 
-    // This.fs.copy(src, dest, copyOpts);
-    // this.fs.copy(this.templatePath(""), dest, copyOpts);
 
     const opts = {
-      name: this.name,
-      title: this.name,
-      description: this.description,
-      version: this.version,
-      apiRoot: this.apiRoot,
       swagger: this.swagger
     };
 
@@ -209,15 +185,15 @@ module.exports = class extends Generator {
     // );
   }
 
-  //   Install() {
-  //     const appDir = path.join(process.cwd(), this.name);
-  //     process.chdir(appDir);
-  //     if (this.useYarn) {
-  //       this.yarnInstall();
-  //     } else {
-  //       this.npmInstall();
-  //     }
-  //   }
+    Install() {
+      const appDir = path.join(process.cwd(), this.name);
+      process.chdir(appDir);
+      if (this.useYarn) {
+        this.yarnInstall();
+      } else {
+        this.npmInstall();
+      }
+    }
 
   end() {
     // If (this.useYarn) {
