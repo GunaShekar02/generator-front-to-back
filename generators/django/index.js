@@ -28,6 +28,16 @@ module.exports = class extends Generator {
 
     const prompts = [
       {
+        type: "list",
+        name: "stack",
+        message: `Would you like Django or Django + React`,
+        choices: [
+          { name: "Django", value: "django" },
+          { name: "Django + React", value: "django_react" }
+        ],
+        default: "django"
+      },
+      {
         type: "input",
         name: "description",
         message: `App description [${this.description}]`
@@ -64,10 +74,12 @@ module.exports = class extends Generator {
 
     return await this.prompt(prompts).then(r => {
       this.name = r.name ? r.name : this.name;
+      this.stack = r.stack;
       this.description = r.description ? r.description : this.description;
       this.version = r.version ? r.version : this.version;
       this.apiRoot = r.apiRoot ? r.apiRoot.replace(/^\/?/, "/") : this.apiRoot;
       this.test = r.test ? r.test : this.test;
+      this.docker = r.docker;
     });
   }
 
@@ -100,17 +112,17 @@ module.exports = class extends Generator {
       }
     };
 
-    if (this.test == "django") {
+    if (this.stack == "django") {
       files.push("django/");
     } else {
       files.push("django-react/");
     }
 
-    // If (!this.docker) {
-    //   copyOpts.globOptions.ignore.push(src + "/+(Dockerfile|.dockerignore)");
-    // }
+    if (!this.docker) {
+      copyOpts.globOptions.ignore.push(src + "/django/mysite/Dockerfile");
+    }
 
-    // this.fs.copy(src, dest, copyOpts);
+    // This.fs.copy(src, dest, copyOpts);
     // this.fs.copy(this.templatePath(""), dest, copyOpts);
 
     const opts = {
@@ -135,12 +147,6 @@ module.exports = class extends Generator {
     //   this.destinationPath(`${this.name}`, "gitignore"),
     //   this.destinationPath(`${this.name}`, ".gitignore")
     // );
-    // if (this.specification !== "openapi_3") {
-    //   this.fs.move(
-    //     this.destinationPath(`${this.name}`, "server/common/api.v2.yml"),
-    //     this.destinationPath(`${this.name}`, "server/common/api.yml")
-    //   );
-    // }
   }
 
   //   Install() {

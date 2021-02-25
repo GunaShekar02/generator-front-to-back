@@ -120,6 +120,7 @@ module.exports = class extends Generator {
       files.push("server/common/api.v2.yml");
       copyOpts.globOptions.ignore.push(src + "/server/common/api.yml");
     }
+
     if (!this.docker) {
       copyOpts.globOptions.ignore.push(src + "/+(Dockerfile|.dockerignore)");
     }
