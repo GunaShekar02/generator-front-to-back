@@ -262,10 +262,6 @@ module.exports = class extends Generator {
         copyOpts.globOptions.ignore.push(src + "/server/common/api.yml");
       }
 
-      if (!this.docker) {
-        copyOpts.globOptions.ignore.push(src + "/+(Dockerfile|.dockerignore)");
-      }
-
       if (this.authentication === "none") {
         copyOpts.globOptions.ignore.push(
           src + "/server/api/middlewares/isAuthenticated.session.js"
