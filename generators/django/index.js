@@ -36,33 +36,49 @@ module.exports = class extends Generator {
           { name: "Django + React", value: "django_react" }
         ],
         default: "django"
-      },
-      {
-        type: "input",
-        name: "description",
-        message: `App description [${this.description}]`
-      },
-      {
-        type: "input",
-        name: "apiRoot",
-        message: `API Root [${this.apiRoot}]`
-      },
-      {
-        type: "input",
-        name: "apiVersion",
-        message: `Version [${this.version}]`
-      },
-      {
-        type: "list",
-        name: "stack",
-        message: `Would you like Django or Django + React`,
-        choices: [
-          { name: "Django", value: "django" },
-          { name: "Django + React", value: "django_react" }
-        ],
-        default: "django"
       }
+      // {
+      //   type: "input",
+      //   name: "description",
+      //   message: `App description [${this.description}]`
+      // },
+      // {
+      //   type: "input",
+      //   name: "apiRoot",
+      //   message: `API Root [${this.apiRoot}]`
+      // },
+      // {
+      //   type: "input",
+      //   name: "apiVersion",
+      //   message: `Version [${this.version}]`
+      // },
+      // {
+      //   type: "list",
+      //   name: "stack",
+      //   message: `Would you like Django or Django + React`,
+      //   choices: [
+      //     { name: "Django", value: "django" },
+      //     { name: "Django + React", value: "django_react" }
+      //   ],
+      //   default: "django"
+      // }
     ];
+
+    const djangoPrompts = [
+      {
+          type: "input",
+          name: "docker",
+          message: `Would yuou like docker`
+        },
+    ]
+
+    const djangoReactPrompts = [
+      {
+        type: "djangoreactprompt",
+        name: "djangoreactprompt",
+        message: `These are django react prompts`
+      },
+    ]
 
     if (!this.options.appname) {
       prompts.unshift({
@@ -75,11 +91,20 @@ module.exports = class extends Generator {
     return await this.prompt(prompts).then(r => {
       this.name = r.name ? r.name : this.name;
       this.stack = r.stack;
-      this.description = r.description ? r.description : this.description;
-      this.version = r.version ? r.version : this.version;
-      this.apiRoot = r.apiRoot ? r.apiRoot.replace(/^\/?/, "/") : this.apiRoot;
-      this.test = r.test ? r.test : this.test;
-      this.docker = r.docker;
+      // this.description = r.description ? r.description : this.description;
+      // this.version = r.version ? r.version : this.version;
+      // this.apiRoot = r.apiRoot ? r.apiRoot.replace(/^\/?/, "/") : this.apiRoot;
+      // this.test = r.test ? r.test : this.test;
+      // this.docker = r.docker;
+      if (this.stack == "django"){
+        return this.prompt(djangoPrompts).then(r => {
+          console.log(r.djangoprompt)
+        })
+      }else{
+        return this.prompt(djangoReactPrompts).then(r => {
+          console.log(r.djangoreactprompt)
+        })
+      }
     });
   }
 
@@ -113,13 +138,11 @@ module.exports = class extends Generator {
     };
 
     if (this.stack == "django") {
+      //Payas's files
       files.push("django/");
     } else {
+      //My files
       files.push("django-react/");
-    }
-
-    if (!this.docker) {
-      copyOpts.globOptions.ignore.push(src + "/django/mysite/Dockerfile");
     }
 
     // This.fs.copy(src, dest, copyOpts);
