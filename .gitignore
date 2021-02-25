@@ -1,2 +1,3 @@
 node_modules
 coverage
+generators/django/templates/django-react/backend/env

@@ -5,6 +5,9 @@ const yosay = require("yosay");
 const path = require("path");
 
 module.exports = class extends Generator {
+  /**
+   * Set a few default values for the configurations.
+   */
   constructor(args, opts) {
     super(args, opts);
     this.argument("appname", { type: String, required: false });
@@ -20,8 +23,11 @@ module.exports = class extends Generator {
     this.specification = "openapi_3";
   }
 
+  /**
+   * Ask the user for their desired configuration and save those options in the class context.
+   */
   async prompting() {
-    // Have Yeoman greet the user.
+    // Welcome the users!
     this.log(
       yosay(
         `Welcome to the supreme ${chalk.red(
@@ -30,7 +36,13 @@ module.exports = class extends Generator {
       )
     );
 
-    const prompts = [
+    // Initial prompts required for all apps, i.e., name, description and type of app.
+    const initialPrompts = [
+      {
+        type: "input",
+        name: "description",
+        message: `App description [${this.description}]`
+      },
       {
         type: "list",
         name: "type",
@@ -44,12 +56,40 @@ module.exports = class extends Generator {
           }
         ],
         default: "fullstack"
+      }
+    ];
+
+    //Configuration required only by the frontend apps.
+    const frontendPrompts = [
+      {
+        type: "confirm",
+        name: "router",
+        message: "Would you like to install React Router?",
+        default: true
       },
       {
-        type: "input",
-        name: "description",
-        message: `App description [${this.description}]`
+        type: "confirm",
+        name: "redux",
+        message: "Would you like to install Redux?",
+        default: true
       },
+      {
+        type: "confirm",
+        name: "axios",
+        message:
+          "Would you like to install Axios to connect to a backend server?",
+        default: true
+      }
+    ];
+
+    frontendPrompts.forEach(
+      prompt =>
+        (prompt.when = answers =>
+          answers.type === "frontend" || answers.type === "fullstack")
+    );
+
+    //Configuration required only by the backend apps.
+    const backendPrompts = [
       {
         type: "input",
         name: "apiRoot",
@@ -59,6 +99,34 @@ module.exports = class extends Generator {
         type: "input",
         name: "apiVersion",
         message: `Version [${this.version}]`
+      },
+      {
+        type: "list",
+        name: "authentication",
+        message: `What kind of authentication would you like in your app?`,
+        choices: [
+          { name: "JSON Web Token", value: "jwt" },
+          { name: "Session Based", value: "session" },
+          { name: "None", value: "none" }
+        ],
+        default: "jwt"
+      },
+      {
+        type: "list",
+        name: "database",
+        message: `What kind of database would you like in your app?`,
+        choices: [
+          { name: "SQL (MySQL + Sequelize)", value: "sql" },
+          { name: "No-SQL (MongoDB + Mongoose)", value: "mongo" },
+          { name: "None", value: "none" }
+        ],
+        default: "sql"
+      },
+      {
+        type: "confirm",
+        name: "cors",
+        message: "Would you like to install CORS?",
+        default: true
       },
       {
         type: "list",
@@ -82,55 +150,101 @@ module.exports = class extends Generator {
       }
     ];
 
-    prompts.forEach(
+    backendPrompts.forEach(
       prompt =>
         (prompt.when = answers =>
           answers.type === "backend" || answers.type === "fullstack")
     );
 
-    delete prompts[0].when;
-
     if (!this.options.appname) {
-      prompts.unshift({
+      initialPrompts.unshift({
         type: "input",
         name: "name",
         message: `App name [${this.name}]`
       });
     }
 
-    return await this.prompt(prompts).then(r => {
-      this.log("You have chosen " + chalk.red(r.type));
-
+    //Save user answers in the class context.
+    return await this.prompt([
+      ...initialPrompts,
+      ...frontendPrompts,
+      ...backendPrompts
+    ]).then(r => {
       this.name = r.name ? r.name : this.name;
       this.type = r.type;
+      this.router = r.router;
+      this.redux = r.redux;
+      this.axios = r.axios;
       this.description = r.description ? r.description : this.description;
       this.version = r.version ? r.version : this.version;
       this.apiRoot = r.apiRoot ? r.apiRoot.replace(/^\/?/, "/") : this.apiRoot;
+      this.authentication = r.authentication;
+      this.database = r.database;
+      this.cors = r.cors;
       this.linter = r.linter;
       this.specification = r.specification;
     });
   }
 
+  /**
+   * Create the template files and save them in appropriate directories.
+   */
   writing() {
-    this.log("In writing");
+    this.log(chalk.blue("Setting up required files..."));
+    //Only for frontend apps.
     if (this.type === "fullstack" || this.type === "frontend") {
-      this.log("In frontend");
       const src = this.sourceRoot() + "/frontend/**";
       const dest = this.destinationPath(`${this.name}/frontend`);
-      this.log(src, dest);
+      //The ignore array is used to ignore files, push file names into this array that you want to ignore.
       const copyOpts = {
         globOptions: {
           ignore: []
         }
       };
-      this.log("Copy starting!");
-      this.fs.copy(src, dest, copyOpts);
-      // this.fs.copy(this.templatePath("frontend/.*"), dest, copyOpts);
-      this.log("Copy done!");
-    }
-    if (this.type === "fullstack" || this.type === "backend") {
-      this.log("In backend");
 
+      if (!this.redux) {
+        copyOpts.globOptions.ignore.push(src + "/src/Redux/ActionTypes.js");
+        copyOpts.globOptions.ignore.push(src + "/src/Redux/ConfigureStore.js");
+        copyOpts.globOptions.ignore.push(
+          src + "/src/Redux/Reducers/example.reducer.js"
+        );
+      }
+      if (!this.axios) {
+        copyOpts.globOptions.ignore.push(
+          src + "/src/Services/example.service.js"
+        );
+        copyOpts.globOptions.ignore.push(src + "/src/Utils/constants.js");
+      }
+
+      this.fs.copy(src, dest, copyOpts);
+
+      const files = [
+        "package.json",
+        "src/App.js",
+        "src/index.js",
+        "src/Containers/Home/Home.js"
+      ];
+
+      //You can pass parameters to files and use them in EJS style. Use this.fs.copyTpl
+      //to pass parameters into files.
+      const opts = {
+        router: this.router,
+        redux: this.redux,
+        axios: this.axios
+      };
+
+      files.forEach(f => {
+        this.fs.copyTpl(
+          this.templatePath(`frontend/${f}`),
+          this.destinationPath(`${this.name}/frontend/${f}`),
+          opts,
+          copyOpts
+        );
+      });
+    }
+
+    //Only for backend apps.
+    if (this.type === "fullstack" || this.type === "backend") {
       const src = this.sourceRoot() + "/backend/**";
       const dest = this.destinationPath(`${this.name}/backend`);
       const files = [
@@ -166,6 +280,41 @@ module.exports = class extends Generator {
       if (!this.docker) {
         copyOpts.globOptions.ignore.push(src + "/+(Dockerfile|.dockerignore)");
       }
+      if (this.authentication === "none") {
+        copyOpts.globOptions.ignore.push(
+          src + "/server/api/middlewares/isAuthenticated.session.js"
+        );
+        copyOpts.globOptions.ignore.push(
+          src + "/server/api/middlewares/isAuthenticated.jwt.js"
+        );
+        copyOpts.globOptions.ignore.push(
+          src + "/server/api/services/authentication.service.js"
+        );
+      } else if (this.authentication === "session") {
+        copyOpts.globOptions.ignore.push(
+          src + "/server/api/services/authentication.service.js"
+        );
+        copyOpts.globOptions.ignore.push(
+          src + "/server/api/middlewares/isAuthenticated.jwt.js"
+        );
+      } else {
+        copyOpts.globOptions.ignore.push(
+          src + "/server/api/middlewares/isAuthenticated.session.js"
+        );
+      }
+
+      if (this.database === "mongo") {
+        copyOpts.globOptions.ignore.push(src + "/server/common/sequelize.js");
+        copyOpts.globOptions.ignore.push(src + "/server/models/User.js");
+      } else if (this.database === "sql") {
+        copyOpts.globOptions.ignore.push(src + "/server/common/mongo.js");
+        copyOpts.globOptions.ignore.push(src + "/server/models/UserModel.js");
+      } else {
+        copyOpts.globOptions.ignore.push(src + "/server/common/sequelize.js");
+        copyOpts.globOptions.ignore.push(src + "/server/common/mongo.js");
+        copyOpts.globOptions.ignore.push(src + "/server/models/User.js");
+        copyOpts.globOptions.ignore.push(src + "/server/models/UserModel.js");
+      }
 
       this.fs.copy(src, dest, copyOpts);
       this.fs.copy(this.templatePath("backend/.*"), dest, copyOpts);
@@ -176,6 +325,9 @@ module.exports = class extends Generator {
         description: this.description,
         version: this.version,
         apiRoot: this.apiRoot,
+        authentication: this.authentication,
+        database: this.database,
+        cors: this.cors,
         linter: this.linter,
         specification: this.specification
       };
@@ -203,13 +355,14 @@ module.exports = class extends Generator {
         );
       }
     }
-    this.log("outside");
   }
 
   install() {
-    this.log("In Install");
+    //Install required dependencies for backend apps.
+    this.log(chalk.blue("Installing backend dependencies..."));
+    let appDir;
     if (this.type === "backend" || this.type === "fullstack") {
-      const appDir = path.join(process.cwd(), `${this.name}/backend`);
+      appDir = path.join(process.cwd(), `${this.name}/backend`);
       process.chdir(appDir);
       if (this.useYarn) {
         this.yarnInstall();
@@ -217,8 +370,16 @@ module.exports = class extends Generator {
         this.npmInstall();
       }
     }
+  }
+
+  end() {
+    //Install required dependencies for frontend apps.
+    this.log(chalk.blue("Installing frontend dependencies..."));
+    let appDir = process.cwd();
+    if (appDir.includes(this.name))
+      appDir = path.join(process.cwd(), `../frontend`);
+    else appDir = path.join(process.cwd(), `${this.name}/frontend`);
     if (this.type === "frontend" || this.type === "fullstack") {
-      const appDir = path.join(process.cwd(), `../frontend`);
       process.chdir(appDir);
       if (this.useYarn) {
         this.yarnInstall();

@@ -22,7 +22,7 @@ module.exports = class extends Generator {
       yosay(
         `Welcome to the supreme ${chalk.red(
           "generator-front-to-back"
-        )} generator, Django+React version!`
+        )} generator, Django Version!`
       )
     );
 
@@ -53,10 +53,14 @@ module.exports = class extends Generator {
         message: `Version [${this.version}]`
       },
       {
-        type: "confirm",
-        name: "Docker",
-        message: "Would you like to include Docker ?",
-        default: true
+        type: "list",
+        name: "stack",
+        message: `Would you like Django or Django + React`,
+        choices: [
+          { name: "Django", value: "django" },
+          { name: "Django + React", value: "django_react" }
+        ],
+        default: "django"
       }
     ];
 
