@@ -55,7 +55,7 @@ module.exports = class extends Generator {
       {
         type: "confirm",
         name: "Docker",
-        message: 'Would you like to include Docker ?',
+        message: "Would you like to include Docker ?",
         default: true
       }
     ];
@@ -118,7 +118,7 @@ module.exports = class extends Generator {
       copyOpts.globOptions.ignore.push(src + "/django/mysite/Dockerfile");
     }
 
-    // this.fs.copy(src, dest, copyOpts);
+    // This.fs.copy(src, dest, copyOpts);
     // this.fs.copy(this.templatePath(""), dest, copyOpts);
 
     const opts = {
@@ -139,7 +139,7 @@ module.exports = class extends Generator {
       );
     });
 
-    // this.fs.move(
+    // This.fs.move(
     //   this.destinationPath(`${this.name}`, "gitignore"),
     //   this.destinationPath(`${this.name}`, ".gitignore")
     // );
