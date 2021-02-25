@@ -1,8 +1,8 @@
 {
   "name": "generator-front-to-back",
-  "version": "0.0.0",
-  "description": "Generates a fullstack application template. Available for Javascript and Python.",
-  "homepage": "https://github.com/GunaShekar02/generator-front-to-back",
+  "version": "0.0.1",
+  "description": "Fullstack bootstrapper",
+  "homepage": "",
   "author": {
     "name": "Guna Shekar",
     "email": "gunashekherproddatoori@gmail.com",

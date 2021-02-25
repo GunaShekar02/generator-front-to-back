@@ -82,11 +82,10 @@ module.exports = class extends Generator {
       }
     ];
 
-    frontendPrompts.forEach(
-      prompt =>
-        (prompt.when = answers =>
-          answers.type === "frontend" || answers.type === "fullstack")
-    );
+    frontendPrompts.forEach(prompt => {
+      prompt.when = answers =>
+        answers.type === "frontend" || answers.type === "fullstack";
+    });
 
     //Configuration required only by the backend apps.
     const backendPrompts = [
@@ -150,11 +149,10 @@ module.exports = class extends Generator {
       }
     ];
 
-    backendPrompts.forEach(
-      prompt =>
-        (prompt.when = answers =>
-          answers.type === "backend" || answers.type === "fullstack")
-    );
+    backendPrompts.forEach(prompt => {
+      prompt.when = answers =>
+        answers.type === "backend" || answers.type === "fullstack";
+    });
 
     if (!this.options.appname) {
       initialPrompts.unshift({
@@ -164,8 +162,7 @@ module.exports = class extends Generator {
       });
     }
 
-    //Save user answers in the class context.
-    return await this.prompt([
+    const results = await this.prompt([
       ...initialPrompts,
       ...frontendPrompts,
       ...backendPrompts
@@ -184,6 +181,8 @@ module.exports = class extends Generator {
       this.linter = r.linter;
       this.specification = r.specification;
     });
+
+    return results;
   }
 
   /**
@@ -209,6 +208,7 @@ module.exports = class extends Generator {
           src + "/src/Redux/Reducers/example.reducer.js"
         );
       }
+
       if (!this.axios) {
         copyOpts.globOptions.ignore.push(
           src + "/src/Services/example.service.js"
@@ -251,6 +251,7 @@ module.exports = class extends Generator {
         "package.json",
         "README.md",
         ".env",
+        "docker-compose.yml",
         ".eslintrc.json",
         "server/routes.js",
         "test/examples.controller.js",
@@ -277,9 +278,7 @@ module.exports = class extends Generator {
         files.push("server/common/api.v2.yml");
         copyOpts.globOptions.ignore.push(src + "/server/common/api.yml");
       }
-      if (!this.docker) {
-        copyOpts.globOptions.ignore.push(src + "/+(Dockerfile|.dockerignore)");
-      }
+
       if (this.authentication === "none") {
         copyOpts.globOptions.ignore.push(
           src + "/server/api/middlewares/isAuthenticated.session.js"
@@ -358,10 +357,9 @@ module.exports = class extends Generator {
   }
 
   install() {
-    //Install required dependencies for backend apps.
-    this.log(chalk.blue("Installing backend dependencies..."));
-    let appDir;
     if (this.type === "backend" || this.type === "fullstack") {
+      this.log(chalk.blue("Installing backend dependencies..."));
+      let appDir;
       appDir = path.join(process.cwd(), `${this.name}/backend`);
       process.chdir(appDir);
       if (this.useYarn) {
@@ -373,13 +371,12 @@ module.exports = class extends Generator {
   }
 
   end() {
-    //Install required dependencies for frontend apps.
-    this.log(chalk.blue("Installing frontend dependencies..."));
-    let appDir = process.cwd();
-    if (appDir.includes(this.name))
-      appDir = path.join(process.cwd(), `../frontend`);
-    else appDir = path.join(process.cwd(), `${this.name}/frontend`);
     if (this.type === "frontend" || this.type === "fullstack") {
+      this.log(chalk.blue("Installing frontend dependencies..."));
+      let appDir = process.cwd();
+      if (appDir.includes(this.name))
+        appDir = path.join(process.cwd(), `../frontend`);
+      else appDir = path.join(process.cwd(), `${this.name}/frontend`);
       process.chdir(appDir);
       if (this.useYarn) {
         this.yarnInstall();
