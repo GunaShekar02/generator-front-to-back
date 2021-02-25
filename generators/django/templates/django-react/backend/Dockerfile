@@ -18,4 +18,4 @@ COPY . /backend/
 WORKDIR /backend/api
 RUN python manage.py makemigrations
 RUN python manage.py migrate
-CMD python3 manage.py runserver
+CMD python manage.py runserver

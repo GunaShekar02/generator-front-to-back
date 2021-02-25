@@ -3,6 +3,7 @@ const Generator = require("yeoman-generator");
 const chalk = require("chalk");
 const yosay = require("yosay");
 const path = require("path");
+const { file } = require("assert");
 
 module.exports = class extends Generator {
   constructor(args, opts) {
@@ -65,20 +66,40 @@ module.exports = class extends Generator {
     ];
 
     const djangoPrompts = [
-      {
-          type: "input",
-          name: "docker",
-          message: `Would yuou like docker`
-        },
-    ]
+      //{
+      //   type: "list",
+      //   name: "stack",
+      //   message: `Would you like Django or Django + React`,
+      //   choices: [
+      //     { name: "Django", value: "django" },
+      //     { name: "Django + React", value: "django_react" }
+      //   ],
+      //   default: "django"
+      // }
+    ];
 
     const djangoReactPrompts = [
       {
-        type: "djangoreactprompt",
-        name: "djangoreactprompt",
-        message: `These are django react prompts`
+        type: "list",
+        name: "docker",
+        message: `Would you like to include Docker`,
+        choices: [
+          { name: "Yes", value: "yes" },
+          { name: "No", value: "no" }
+        ],
+        default: "yes"
       },
-    ]
+      {
+        type: "list",
+        name: "swagger",
+        message: `Would you like to include Swagger?`,
+        choices: [
+          { name: "Yes", value: "yes" },
+          { name: "No", value: "no" }
+        ],
+        default: "yes"
+      }
+    ];
 
     if (!this.options.appname) {
       prompts.unshift({
@@ -91,20 +112,21 @@ module.exports = class extends Generator {
     return await this.prompt(prompts).then(r => {
       this.name = r.name ? r.name : this.name;
       this.stack = r.stack;
-      // this.description = r.description ? r.description : this.description;
+      // This.description = r.description ? r.description : this.description;
       // this.version = r.version ? r.version : this.version;
       // this.apiRoot = r.apiRoot ? r.apiRoot.replace(/^\/?/, "/") : this.apiRoot;
       // this.test = r.test ? r.test : this.test;
       // this.docker = r.docker;
-      if (this.stack == "django"){
+      if (this.stack == "django") {
         return this.prompt(djangoPrompts).then(r => {
-          console.log(r.djangoprompt)
-        })
-      }else{
-        return this.prompt(djangoReactPrompts).then(r => {
-          console.log(r.djangoreactprompt)
-        })
+          console.log(r.djangoprompt);
+        });
       }
+
+      return this.prompt(djangoReactPrompts).then(r => {
+        this.docker = r.docker;
+        this.swagger = r.swagger;
+      });
     });
   }
 
@@ -138,11 +160,25 @@ module.exports = class extends Generator {
     };
 
     if (this.stack == "django") {
-      //Payas's files
+      // Payas's files
       files.push("django/");
     } else {
-      //My files
-      files.push("django-react/");
+      // My files
+      files.push('django-react/backend/api/');
+      files.push('django-react/backend/requirements.txt');
+      files.push('django-react/frontend/public/');
+      files.push('django-react/frontend/src/');
+      files.push('django-react/frontend/package-lock.json');
+      files.push('django-react/frontend/package.json');
+      files.push('django-react/frontend/README.MD');
+      if (this.docker == "yes"){
+        files.push('django-react/backend/Dockerfile');
+        files.push('django-react/backend/entrypoint.sh');
+        files.push('django-react/frontend/Dockerfile');
+        files.push('django-react/frontend/Dockerfile-dev.dockerfile');
+        files.push('django-react/docker-compose.yml');
+        files.push('django-react/webserver');
+      }
     }
 
     // This.fs.copy(src, dest, copyOpts);
@@ -153,7 +189,8 @@ module.exports = class extends Generator {
       title: this.name,
       description: this.description,
       version: this.version,
-      apiRoot: this.apiRoot
+      apiRoot: this.apiRoot,
+      swagger: this.swagger
     };
 
     files.forEach(f => {
