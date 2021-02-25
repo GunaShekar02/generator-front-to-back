@@ -27,6 +27,20 @@ yo front-to-back:django
 
 Answer a few simple questions and configure your app in a few seconds!
 
+## Features
+
+### Javascript
+
+### Django 
+
+- Django+React - quickly set up an already configured Django+React project 
+- Redux - Optionally use Redux with your Django+React app for application state management
+- Swagger - tool to design, build, document, and use RESTful web services 
+- Docker support - the project includes Dockerfile for easy set up 
+- JSON Web Tokens - use JWT to securely transmit information between parties as a JSON object 
+- PostgreSQL - front-to-back generator comes with an already configured Relational Database Management System, PostrgreSQL  
+- Heroku - quickly ddeploy your Django+React app to Heroku
+
 ## License
 
 MIT © [Guna Shekar]()
