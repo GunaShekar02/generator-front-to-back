@@ -27,6 +27,29 @@ yo front-to-back:django
 
 Answer a few simple questions and configure your app in a few seconds!
 
+## Features
+
+### Javascript
+
+- React Router - optionally add react router to your project
+- Redux - optionally use Redux with your React app for global state management. (Comes fully configured)
+- Axios - optionally add axios configuration to start interacting with your backend right away
+- Authentication support - setup JWT or session based authentication out of the box
+- Database configuration - choose between a SQL or a No-SQL database and have it fully configured
+- CORS - optionally add CORS to your backend
+- Docker support - the project includes Dockerfile and Docker Compose as well for easy deployment
+- Swagger - tool to design, build, document, and use RESTful web services
+
+### Django 
+
+- Django+React - quickly set up an already configured Django+React project 
+- Redux - optionally use Redux with your Django+React app for application state management
+- Swagger - tool to design, build, document, and use RESTful web services 
+- Docker support - the project includes Dockerfile for easy set up 
+- JSON Web Tokens - use JWT to securely transmit information between parties as a JSON object 
+- PostgreSQL - front-to-back generator comes with an already configured Relational Database Management System, PostrgreSQL  
+- Heroku - quickly deploy your Django+React app to Heroku
+
 ## License
 
 MIT © [Guna Shekar]()
