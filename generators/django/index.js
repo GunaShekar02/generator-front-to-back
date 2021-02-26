@@ -128,6 +128,7 @@ module.exports = class extends Generator {
           this.swagger = r.swagger;
         });
       }
+      
     });
   }
 
@@ -185,21 +186,21 @@ module.exports = class extends Generator {
     // );
   }
 
-    Install() {
-      const appDir = path.join(process.cwd(), this.name);
-      process.chdir(appDir);
-      if (this.useYarn) {
-        this.yarnInstall();
-      } else {
-        this.npmInstall();
-      }
-    }
+    // Install() {
+    //   const appDir = path.join(process.cwd(), this.name);
+    //   process.chdir(appDir);
+    //   if (this.useYarn) {
+    //     this.yarnInstall();
+    //   } else {
+    //     this.npmInstall();
+    //   }
+    // }
 
-  end() {
+  //end() {
     // If (this.useYarn) {
     //   this.spawnCommandSync("yarn", ["lint:fix"]);
     // } else {
     //   this.spawnCommandSync("npm", ["run", "lint:fix"]);
     // }
-  }
+  //}
 };
