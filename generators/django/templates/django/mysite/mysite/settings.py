@@ -33,7 +33,6 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'rest_framework',               # let django know that REST Framework was installed
     'myapi.apps.MyapiConfig',       # added to recognize myapi directory
-    # 'rest_framework_swagger',       # install Swagger for API documentation
     'drf_yasg',
     'django.contrib.admin',
     'django.contrib.auth',

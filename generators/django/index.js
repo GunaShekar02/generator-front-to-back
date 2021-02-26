@@ -66,16 +66,18 @@ module.exports = class extends Generator {
     ];
 
     const djangoPrompts = [
-      // {
-      //   type: "list",
-      //   name: "stack",
-      //   message: `Would you like Django or Django + React`,
-      //   choices: [
-      //     { name: "Django", value: "django" },
-      //     { name: "Django + React", value: "django_react" }
-      //   ],
-      //   default: "django"
-      // }
+      {
+        type: "confirm",
+        name: "docker",
+        message: `Would you like to include Docker?`,
+        default: true
+      },
+      {
+        type: "confirm",
+        name: "swagger",
+        message: `Would you like to include Swagger?`,
+        default: true
+      }
     ];
 
     const djangoReactPrompts = [
@@ -144,8 +146,14 @@ module.exports = class extends Generator {
     };
 
     if (this.stack == "django") {
-      // Payas's files
-      files.push("django/");
+      files.push("django/mysite/myapi");
+      files.push("django/mysite/mysite");
+      files.push("django/mysite/requirements.txt")
+      files.push("django/mysite/manage.py");
+      files.push("django/mysite/db.sqlite3");
+      if (this.docker){
+        files.push("django/mysite/Dockerfile");
+      }
     } else {
       files.push("django-react/backend/api/");
       files.push("django-react/backend/requirements.txt");
@@ -185,15 +193,15 @@ module.exports = class extends Generator {
     // );
   }
 
-    Install() {
-      const appDir = path.join(process.cwd(), this.name);
-      process.chdir(appDir);
-      if (this.useYarn) {
-        this.yarnInstall();
-      } else {
-        this.npmInstall();
-      }
-    }
+    // Install() {
+    //   const appDir = path.join(process.cwd(), this.name);
+    //   process.chdir(appDir);
+    //   if (this.useYarn) {
+    //     this.yarnInstall();
+    //   } else {
+    //     this.npmInstall();
+    //   }
+    // }
 
   end() {
     // If (this.useYarn) {
