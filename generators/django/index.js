@@ -191,25 +191,7 @@ module.exports = class extends Generator {
     // );
   }
 
-<<<<<<< HEAD
-  // Install() {
-  //   const appDir = path.join(process.cwd(), this.name);
-  //   process.chdir(appDir);
-  //   if (this.useYarn) {
-  //     this.yarnInstall();
-  //   } else {
-  //     this.npmInstall();
-  //   }
-  // }
 
-  // end() {
-  // If (this.useYarn) {
-  //   this.spawnCommandSync("yarn", ["lint:fix"]);
-  // } else {
-  //   this.spawnCommandSync("npm", ["run", "lint:fix"]);
-  // }
-  // }
-=======
     // Install() {
     //   const appDir = path.join(process.cwd(), this.name);
     //   process.chdir(appDir);
@@ -227,5 +209,4 @@ module.exports = class extends Generator {
     //   this.spawnCommandSync("npm", ["run", "lint:fix"]);
     // }
   }
->>>>>>> bcde3be0a6b2c82bd41ea4ebeb81ed184833674f
 };
