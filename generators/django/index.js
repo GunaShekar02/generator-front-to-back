@@ -148,10 +148,10 @@ module.exports = class extends Generator {
     if (this.stack == "django") {
       files.push("django/mysite/myapi");
       files.push("django/mysite/mysite");
-      files.push("django/mysite/requirements.txt")
+      files.push("django/mysite/requirements.txt");
       files.push("django/mysite/manage.py");
       files.push("django/mysite/db.sqlite3");
-      if (this.docker){
+      if (this.docker) {
         files.push("django/mysite/Dockerfile");
       }
     } else {
@@ -161,7 +161,7 @@ module.exports = class extends Generator {
       files.push("django-react/frontend/src/");
       files.push("django-react/frontend/package-lock.json");
       files.push("django-react/frontend/package.json");
-      files.push("django-react/frontend/README.MD");
+      files.push("django-react/README.MD")
       if (this.docker == "yes") {
         files.push("django-react/backend/Dockerfile");
         files.push("django-react/backend/entrypoint.sh");
@@ -193,16 +193,15 @@ module.exports = class extends Generator {
     // );
   }
 
-
-    // Install() {
-    //   const appDir = path.join(process.cwd(), this.name);
-    //   process.chdir(appDir);
-    //   if (this.useYarn) {
-    //     this.yarnInstall();
-    //   } else {
-    //     this.npmInstall();
-    //   }
-    // }
+  // Install() {
+  //   const appDir = path.join(process.cwd(), this.name);
+  //   process.chdir(appDir);
+  //   if (this.useYarn) {
+  //     this.yarnInstall();
+  //   } else {
+  //     this.npmInstall();
+  //   }
+  // }
 
   end() {
     // If (this.useYarn) {
