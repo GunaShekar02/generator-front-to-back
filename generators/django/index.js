@@ -121,7 +121,8 @@ module.exports = class extends Generator {
       // this.docker = r.docker;
       if (this.stack == "django") {
         return this.prompt(djangoPrompts).then(r => {
-          console.log(r.djangoprompt);
+          this.docker = r.docker;
+          this.swagger = r.swagger;
         });
       }
 
@@ -172,7 +173,8 @@ module.exports = class extends Generator {
     }
 
     const opts = {
-      swagger: this.swagger
+      swagger: this.swagger,
+      docker: this.docker
     };
 
     files.forEach(f => {
