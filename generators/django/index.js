@@ -122,13 +122,11 @@ module.exports = class extends Generator {
           console.log(r.djangoprompt);
         });
       }
-      else{
-        return this.prompt(djangoReactPrompts).then(r => {
-          this.docker = r.docker;
-          this.swagger = r.swagger;
-        });
-      }
-      
+
+      return this.prompt(djangoReactPrompts).then(r => {
+        this.docker = r.docker;
+        this.swagger = r.swagger;
+      });
     });
   }
 
@@ -165,7 +163,6 @@ module.exports = class extends Generator {
       }
     }
 
-
     const opts = {
       swagger: this.swagger
     };
@@ -186,21 +183,21 @@ module.exports = class extends Generator {
     // );
   }
 
-    // Install() {
-    //   const appDir = path.join(process.cwd(), this.name);
-    //   process.chdir(appDir);
-    //   if (this.useYarn) {
-    //     this.yarnInstall();
-    //   } else {
-    //     this.npmInstall();
-    //   }
-    // }
+  // Install() {
+  //   const appDir = path.join(process.cwd(), this.name);
+  //   process.chdir(appDir);
+  //   if (this.useYarn) {
+  //     this.yarnInstall();
+  //   } else {
+  //     this.npmInstall();
+  //   }
+  // }
 
-  //end() {
-    // If (this.useYarn) {
-    //   this.spawnCommandSync("yarn", ["lint:fix"]);
-    // } else {
-    //   this.spawnCommandSync("npm", ["run", "lint:fix"]);
-    // }
-  //}
+  // end() {
+  // If (this.useYarn) {
+  //   this.spawnCommandSync("yarn", ["lint:fix"]);
+  // } else {
+  //   this.spawnCommandSync("npm", ["run", "lint:fix"]);
+  // }
+  // }
 };
