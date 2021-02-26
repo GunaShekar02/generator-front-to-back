@@ -33,7 +33,6 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'rest_framework',               # let django know that REST Framework was installed
     'myapi.apps.MyapiConfig',       # added to recognize myapi directory
-    # 'rest_framework_swagger',       # install Swagger for API documentation
     'drf_yasg',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -53,10 +52,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-REST_FRAMEWORK = {
-    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema' ,
-    'DEFAULT_AUTHENTICATION_CLASSES': ('rest_framework_simplejwt.authentication.JWTAuthentication',)
-    }
+REST_FRAMEWORK = {'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema'}
 
 ROOT_URLCONF = 'mysite.urls'
 
