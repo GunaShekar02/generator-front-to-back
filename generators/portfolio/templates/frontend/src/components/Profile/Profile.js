@@ -18,22 +18,22 @@ function Profile() {
             </h2>
             <h2>
                 <a href="https://www.twitter.com" className="social_icons" target="_blank">
-                    <FeatherIcon className="user__icon p-1" icon="twitter"/>
+                    <FeatherIcon className="p-1 m-2" size="35" icon="twitter" />
                 </a>
             <a href="https://www.linkedin.com" className="social_icons" target="_blank">
-                <FeatherIcon className="user__icon p-1" icon="linkedin"/>
+                <FeatherIcon className="p-1 m-2" size="35" icon="linkedin"/>
             </a>
 
             <a href="https://www.github.com" className="social_icons" target="_blank">
-                <FeatherIcon className="user__icon p-1" icon="github"/>
+                <FeatherIcon className="p-1 m-2" size="35" icon="github"/>
             </a>
 
             <a href="https://www.facebook.com" className="social_icons" target="_blank">
-                <FeatherIcon className="user__icon p-1" icon="facebook"/>
+                <FeatherIcon className="p-1 m-2" size="35" icon="facebook"/>
             </a>
 
             <a href="https://www.instagram.com" className="social_icons" target="_blank">
-                <FeatherIcon className="user__icon p-1" icon="instagram"/>
+                <FeatherIcon className="p-1 m-2" size="35" icon="instagram"/>
             </a>
             </h2>
         </div>

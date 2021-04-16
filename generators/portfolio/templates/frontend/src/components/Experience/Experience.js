@@ -29,7 +29,7 @@ function Experience() {
     <div style={{display:"flex",flexWrap:"wrap",alignItems:"center",justifyContent:"center"}}>
       {data.map((item) => {
           return(
-            <Card style={{ width: '18rem',margin:"20px 10px" }}  className="card_style">
+            <Card style={{ width: '18rem',margin:"20px 10px" ,minHeight:"150px"}}  className="card_style">
             <Card.Body>
               <Card.Title>{item.title}</Card.Title>
               <Card.Subtitle className="mb-2 text-muted">{item.subtitle}</Card.Subtitle>

@@ -13,7 +13,7 @@ const data=[
     {
         title:"Attack on Web",
         subtitle:"Testing tool for API keys",
-        text:"Lorem ip[sum lorem ipsum Lorem ip[sum lorem ipsum Lore ipsum Lorem Lorem ipm ipsum",
+        text:"Lorem ip[sum lorem ipsum Lorem ip[sum lorem ipsum Lor",
         link:"View",
     },
     {
@@ -31,7 +31,7 @@ function Projects() {
     <div style={{display:"flex",flexWrap:"wrap",alignItems:"center",justifyContent:"center"}}>
       {data.map((item) => {
           return(
-            <Card className="card_style" style={{ width: '18rem',margin:"20px 10px" }}>
+            <Card className="card_style" style={{ width: '18rem',margin:"20px 10px",minHeight:"250px" }}>
             <Card.Body>
               <Card.Title>{item.title}</Card.Title>
               <Card.Subtitle className="mb-2 text-muted">{item.subtitle}</Card.Subtitle>
