@@ -82,9 +82,10 @@ module.exports = class extends Generator {
   }
 
   install() {
-    const appDir = path.join(process.cwd(), this.props.name);
-    process.chdir(appDir);
-    // This.npmInstall();
-    this.log("Npm install");
+    const dir = this.props.name || "myapp";
+    const appDir = path.join(process.cwd(), dir);
+    process.chdir(appDir + "/frontend");
+    this.npmInstall();
+    this.log("portfolio created Succesfully");
   }
 };
