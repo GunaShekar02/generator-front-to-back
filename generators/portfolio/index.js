@@ -39,10 +39,6 @@ module.exports = class extends Generator {
     ];
 
     return this.prompt(prompts).then(props => {
-      // This.log(this.props)
-      // this.log(this.name)
-      // this.props.name = this.prompts.name || "myapp"
-      // To access props later use this.props.someAnswer;
       this.props = props;
     });
   }
@@ -59,26 +55,7 @@ module.exports = class extends Generator {
       }
     };
 
-    // If (!this.props.mongodb)
-    //    copyOpts.globOptions.ignore.push(src + "/mongoose.js");
-
     this.fs.copy(src, dest, copyOpts);
-
-    /* Const files = ["index.js", "package.json"];
-
-        const opts = {
-            name: this.props.name,
-            mongodb: this.props.mongodb
-        };
-
-        files.forEach(file => {
-            this.fs.copyTpl(
-                this.templatePath(file),
-                this.destinationPath(`${this.props.name}/${file}`),
-                opts,
-                copyOpts
-            );
-        }); */
   }
 
   install() {
@@ -86,6 +63,5 @@ module.exports = class extends Generator {
     const appDir = path.join(process.cwd(), dir);
     process.chdir(appDir + "/frontend");
     this.npmInstall();
-    this.log("portfolio created Succesfully");
   }
 };
