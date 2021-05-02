@@ -159,7 +159,6 @@ module.exports = class extends Generator {
       files.push("django-react/backend/requirements.txt");
       files.push("django-react/frontend/public/");
       files.push("django-react/frontend/src/");
-      files.push("django-react/frontend/package-lock.json");
       files.push("django-react/frontend/package.json");
       files.push("django-react/README.MD")
       if (this.docker == "yes") {
