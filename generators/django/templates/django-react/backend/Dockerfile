@@ -13,7 +13,7 @@ RUN mkdir /backend
 WORKDIR /backend
 COPY requirements.txt /backend/
 EXPOSE 8000
-RUN pip install -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 COPY . /backend/
 WORKDIR /backend/api
 RUN python manage.py makemigrations

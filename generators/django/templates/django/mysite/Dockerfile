@@ -5,7 +5,7 @@ ENV PYTHONUNBUFFERED=1
 WORKDIR /generators/django/templates/django/mysite
 
 COPY requirements.txt /generators/django/templates/django/mysite
-RUN pip3 install --upgrade pip -r requirements.txt
+RUN pip3 install --no-cache-dir --upgrade pip -r requirements.txt
 
 COPY . /generators/django/templates/django/mysite
 
