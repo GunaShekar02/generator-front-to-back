@@ -27,6 +27,34 @@ yo front-to-back:django
 
 Answer a few simple questions and configure your app in a few seconds!
 
+## Using Docker
+
+
+Build the Docker images:
+
+```bash
+docker build -t generator-front-to-back:latest .
+```
+
+Make a folder where you want to generate the Service:
+
+```bash
+mkdir service
+cd service
+```
+
+Run the generator from image to generate service:
+
+```bash
+docker run -it --rm -v $PWD:/home/yo/app generator-front-to-back
+```
+
+Run and attach interactive shell to the generator docker container to work from inside the running container:
+
+```bash
+docker run -it --rm -v $PWD:/home/yo/app generator-front-to-back /bin/bash
+```
+
 ## Features
 
 ### Javascript
